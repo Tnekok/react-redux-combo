@@ -1,14 +1,41 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React from 'react'
+import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
 import rootReducer from './reducers'
 
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import { reactReduxFirebase } from 'react-redux-firebase'
+import firebase from 'firebase'
 
-const store = createStore(rootReducer)
+import './index.css'
+import App from './App'
+import * as serviceWorker from './serviceWorker'
+
+// Firebase config
+const firebaseConfig = {
+    apiKey: 'AIzaSyDZSqcH_CLrqtKlZx-ySdNQxGW5wyrDGfM',
+    authDomain: 'awesome-food-manager-94122.firebaseapp.com',
+    databaseURL: 'https://awesome-food-manager-94122.firebaseio.com',
+    projectId: 'awesome-food-manager-94122',
+    storageBucket: 'awesome-food-manager-94122.appspot.com',
+    messagingSenderId: '354898593672',
+    appId: '1:354898593672:web:98f44022edbd5553'
+}
+firebase.initializeApp(firebaseConfig)
+
+// react-redux-firebase options
+const config = {
+    userProfile: 'users', // firebase root where user profiles are stored
+    enableLogging: false, // enable/disable Firebase's database logging
+}
+
+// Add redux Firebase to compose
+const createStoreWithFirebase = compose(
+    reactReduxFirebase(firebase, config)
+)(createStore)
+
+// const store = createStore(rootReducer)
+const store = createStoreWithFirebase(rootReducer)
 
 ReactDOM.render(
     <Provider store={store}>
